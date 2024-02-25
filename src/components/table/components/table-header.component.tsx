@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react";
 
 type TableHeaderProps = {
     name: string;
-    className: string;
+    className?: string;
 }
 
 function TableHeader(props: PropsWithChildren<TableHeaderProps>) {

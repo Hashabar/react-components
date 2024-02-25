@@ -5,9 +5,7 @@ type TableProps = {
 }
 
 function Table(props: PropsWithChildren<TableProps>) {
-    return (
-    <table className={props.className}></table>
-    );
+    return <table className={props.className}>{props.children}</table>;
 }
 
 export default Table
