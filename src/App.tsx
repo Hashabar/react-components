@@ -1,14 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { TableColumn } from "./components/components/table/classes/table-column.class";
+import { Table } from "./components/components/table/components/table.index";
 import Loading from "./components/shared/loading/loading.component";
-import { TableColumn } from "./components/table/classes/table-column.class";
-import TableBody from "./components/table/components/table-body.component";
-import TableCell from "./components/table/components/table-cell.component";
-import TableFooter from "./components/table/components/table-footer.component";
-import TableHead from "./components/table/components/table-head.component";
-import TableHeader from "./components/table/components/table-header.component";
-import TableRow from "./components/table/components/table-row-component";
-import Table from "./components/table/components/table.component";
 import { Person } from "./data/person.class";
 import "./index";
 
@@ -31,10 +25,10 @@ function App() {
     axios.defaults.baseURL = "http://localhost:8000";
     setData(
       await axios
-        .post("/person")
+        .post("/person?take=100")
         .then((response) => {
           setIsLoading(false);
-        return response.data as Person[];
+          return response.data.persons as Person[];
     })
     .catch(() => {
       setIsLoading(false);
@@ -44,42 +38,48 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen flex-col bg-gray-600 p-12">
-      <div className="min-h-0 w-full flex-1 overflow-y-auto">
-        {isLoading && (
-          <div className = "flex flex-col justify-center items-center w-full h-full">
-            <Loading size="w-20 h-20"/>
-          </div>
-        )}
-        {!isLoading && (
-          <Table className="w-full table table-pin-rows">   
-            <TableHead> 
+    <div className="flex h-screen w-screen flex-col bg-base-300 p-12">
+      {isLoading && (
+        <div className="flex flex-col justify-center items-center w-full h-full">
+          <Loading size="w-20 h-20" />
+        </div>
+      )}
+      {!isLoading && (
+        <Table.Root className="flex w-full flex-col min-h-0 flex-1 rounded-lg p-1 bg-base-200">
+          <Table.Title
+            className="bg-base-200 p-2 flex flex-col justify-center items-center"
+            title="People"
+          />
+          <Table.Content className="w-full table table-pin-rows">
+            <Table.Head>
               {tableColums.map((tableColumn) => {
                 return (
-                  <TableHeader
+                  <Table.Header
                     className={tableColumn.className}
                     name={tableColumn.name}
                     key={tableColumn.name}
-                  ></TableHeader>
+                  ></Table.Header>
                 );
               })}
-            </TableHead>
-            <TableBody>
-              {data.map((row) => { //.map e o foreach
+            </Table.Head>
+            <Table.Body>
+              {data.map((row) => {
                 return (
-                  <TableRow className="bg-base-100" key={row.id}>
-                    <TableCell>{row.name} </TableCell>
-                    <TableCell>{row.age}</TableCell>
-                    <TableCell>{row.sex} </TableCell>
-                    <TableCell>{row.address}</TableCell>
-                  </TableRow>
+                  <Table.Row className="bg-base-100" key={row.id}>
+                    <Table.Cell>{row.name}</Table.Cell>
+                    <Table.Cell>{row.age}</Table.Cell>
+                    <Table.Cell>{row.sex}</Table.Cell>
+                    <Table.Cell>{row.address}</Table.Cell>
+                  </Table.Row>
                 );
               })}
-            </TableBody>
-            <TableFooter className="sticky bottom-0 bg-primary w-full">teste</TableFooter>
-          </Table>
-        )}
-      </div>
+            </Table.Body>
+          </Table.Content>
+          <Table.Pagination className="sticky bottom-0 bg-base-200 w-full h-10">
+            teste
+          </Table.Pagination>
+        </Table.Root>
+      )}
     </div>
   );
 }
